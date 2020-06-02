@@ -4,7 +4,7 @@
 
 run() ->
     Batch = ".\\dir with space\\test.bat",
-    Arg = io_lib:format("echo off && call \"~ts\"", [Batch]),
+    Arg = io_lib:format("echo off && call ~ts", [Batch]),
     io:format("Arg: ~s~n", [Arg]),
     Args = ["/Q", "/C", Arg],
     Opts = [{args, Args}, hide, binary, stderr_to_stdout, exit_status],
