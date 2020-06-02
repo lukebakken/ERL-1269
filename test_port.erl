@@ -3,7 +3,10 @@
 -export([run/0]).
 
 run() ->
-    Args = ["/Q", "/U", "/C", "C:/Users/lbakken/issues/misc/temp.bat"],
+    Batch = ".\\dir with space\\test.bat",
+    Arg = io_lib:format("echo off && call \"~ts\"", [Batch]),
+    io:format("Arg: ~s~n", [Arg]),
+    Args = ["/Q", "/C", Arg],
     Opts = [{args, Args}, hide, binary, stderr_to_stdout, exit_status],
     case os:find_executable("cmd.exe") of
         false ->
@@ -16,8 +19,8 @@ run() ->
 receive_data(Port) ->
     receive
         {Port, {exit_status, ExitStatus}} ->
-            io:format("@@@@@@@@ exit status: ~b", [ExitStatus]);
+            io:format("exit status: ~b", [ExitStatus]);
         {Port, {data, Chunk}} ->
-            io:format("@@@@@@@@ output: ~ts", [Chunk]),
+            io:format("output: ~ts", [Chunk]),
             receive_data(Port)
     end.
