@@ -1,1 +1,1 @@
-@echo HELLO WORLD
+set RABBITMQ_NODENAME=rabbit-foo@%COMPUTERNAME%

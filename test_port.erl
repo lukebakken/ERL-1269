@@ -3,16 +3,19 @@
 -export([run/0]).
 
 run() ->
-    Batch = ".\\dir with space\\test.bat",
-    Arg = io_lib:format("echo off && call \"~ts\"", [Batch]),
-    io:format("Arg: ~s~n", [Arg]),
-    Args = ["/Q", "/C", Arg],
+    Args = ["/Q", "/C", ".\\dir with space\\test.bat", "&&", "set"],
+    io:format("Args: ~p~n", [Args]),
     Opts = [{args, Args}, hide, binary, stderr_to_stdout, exit_status],
-    case os:find_executable("cmd.exe") of
+    run_with_executable("echoargs.exe", Opts),
+    run_with_executable("cmd.exe", Opts).
+
+run_with_executable(Exe0, Opts) ->
+    case os:find_executable(Exe0) of
         false ->
             error;
-        Exe ->
-            Port = erlang:open_port({spawn_executable, Exe}, Opts),
+        Exe1 ->
+            io:format("~n~nExe1: ~p~n", [Exe1]),
+            Port = erlang:open_port({spawn_executable, Exe1}, Opts),
             receive_data(Port)
     end.
 
