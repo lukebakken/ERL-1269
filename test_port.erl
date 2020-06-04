@@ -3,11 +3,10 @@
 -export([run/0]).
 
 run() ->
-    Args = ["/Q", "/C", ".\\dir with space\\test.bat", "&&", "set"],
+    Args = ["-ec", ". \"./dir with space/rabbitmq-env.conf\" && set"],
     io:format("Args: ~p~n", [Args]),
-    Opts = [{args, Args}, hide, binary, stderr_to_stdout, exit_status],
-    run_with_executable("echoargs.exe", Opts),
-    run_with_executable("cmd.exe", Opts).
+    Opts = [{args, Args}, binary, use_stdio, stderr_to_stdout, exit_status],
+    run_with_executable("sh", Opts).
 
 run_with_executable(Exe0, Opts) ->
     case os:find_executable(Exe0) of
